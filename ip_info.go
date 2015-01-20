@@ -8,31 +8,30 @@ import (
 	"fmt"
 	"encoding/json"
 	//	"bytes"
-	"net"
-	"regexp"
+//	"net"
+//	"regexp"
 )
-
-type Ip struct{
-	Ip net.IP
-}
 
 func main() {
 
 	stdin, err := ioutil.ReadAll(os.Stdin)
 
-	var ip Ip
-	err = json.Unmarshal(stdin,&ip)
+	var dat map[string]interface{}
+	err = json.Unmarshal(stdin,&dat)
 	if err != nil {
 		fmt.Println("Error in Unmarshaling...",err)
 	}
 
-	fmt.Println(ip.Ip)
-	getIpInfo(ip)
+    if (dat["domain"] != nil) {
+        runWhois(dat["domain"].(string))
+    } else {
+        runWhois(dat["ip"].(string))
+    }
 }
 
-func getIpInfo(ip Ip){
+func runWhois(dat string){
 
-	cmd := exec.Command("whois", ip.Ip.String())
+	cmd := exec.Command("whois", dat)
 	out, err := cmd.Output()
 
 	if err != nil {
@@ -41,16 +40,8 @@ func getIpInfo(ip Ip){
 	}
 
 	parseWhois(out)
-	// First extract the data
-	/*
-	var w io.Writer
-	encoder := json.NewEncoder(w)
-	err = encoder.Encode(&out)
-	*/
-	//fmt.Println(string(out))
 }
 
 func parseWhois(whois []byte){
-	r, _ := regexp.Compile("^[^%].*:")
-	fmt.Println(r.FindString(string(whois)))
+	fmt.Println(string(whois))
 }
