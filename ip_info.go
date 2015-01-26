@@ -8,9 +8,21 @@ import (
 	"fmt"
 	"encoding/json"
 	//	"bytes"
-//	"net"
-//	"regexp"
+	//	"net"
+	"regexp"
 )
+
+type Person struct{
+	name string
+	surname string
+	address string
+}
+
+type Domain struct{
+	domainName string
+	registrar string
+	sponsoringRegistrar string
+}
 
 func main() {
 
@@ -22,11 +34,11 @@ func main() {
 		fmt.Println("Error in Unmarshaling...",err)
 	}
 
-    if (dat["domain"] != nil) {
-        runWhois(dat["domain"].(string))
-    } else {
-        runWhois(dat["ip"].(string))
-    }
+	if (dat["domain"] != nil) {
+		runWhois(dat["domain"].(string))
+	} else {
+		runWhois(dat["ip"].(string))
+	}
 }
 
 func runWhois(dat string){
@@ -43,5 +55,28 @@ func runWhois(dat string){
 }
 
 func parseWhois(whois []byte){
-	fmt.Println(string(whois))
+
+	var r map[string]*regexp.Regexp
+	r = make(map[string]*regexp.Regexp)
+
+	// First extract Domain Admin information
+	r["adminName"] = regexp.MustCompile("Admin Name:(.*)")
+	r["adminOrganization"] = regexp.MustCompile("Admin Organization:(.*)")
+	r["adminStreet"] = regexp.MustCompile("Admin Street:(.*)")
+	r["adminCity"] = regexp.MustCompile("Admin City:(.*)")
+
+	/*
+	for k, _ := range r {
+		fmt.Println(r[k].FindStringSubmatch(string(whois)))
+	}
+	*/
+
+	jsonString, err := json.Marshal(r)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(jsonString)
+
 }
+
