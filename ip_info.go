@@ -4,23 +4,23 @@ import (
 	"os"
 	"os/exec"
 	//	"io"
-	"io/ioutil"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	//	"bytes"
 	//	"net"
 	"regexp"
 )
 
-type Person struct{
-	name string
+type Person struct {
+	name    string
 	surname string
 	address string
 }
 
-type Domain struct{
-	domainName string
-	registrar string
+type Domain struct {
+	domainName          string
+	registrar           string
 	sponsoringRegistrar string
 }
 
@@ -29,19 +29,19 @@ func main() {
 	stdin, err := ioutil.ReadAll(os.Stdin)
 
 	var dat map[string]interface{}
-	err = json.Unmarshal(stdin,&dat)
+	err = json.Unmarshal(stdin, &dat)
 	if err != nil {
-		fmt.Println("Error in Unmarshaling...",err)
+		fmt.Println("Error in Unmarshaling...", err)
 	}
 
-	if (dat["domain"] != nil) {
+	if dat["domain"] != nil {
 		runWhois(dat["domain"].(string))
 	} else {
 		runWhois(dat["ip"].(string))
 	}
 }
 
-func runWhois(dat string){
+func runWhois(dat string) {
 
 	cmd := exec.Command("whois", dat)
 	out, err := cmd.Output()
@@ -54,7 +54,7 @@ func runWhois(dat string){
 	parseWhois(out)
 }
 
-func parseWhois(whois []byte){
+func parseWhois(whois []byte) {
 
 	var r map[string]*regexp.Regexp
 	r = make(map[string]*regexp.Regexp)
@@ -66,9 +66,9 @@ func parseWhois(whois []byte){
 	r["adminCity"] = regexp.MustCompile("Admin City:(.*)")
 
 	/*
-	for k, _ := range r {
-		fmt.Println(r[k].FindStringSubmatch(string(whois)))
-	}
+		for k, _ := range r {
+			fmt.Println(r[k].FindStringSubmatch(string(whois)))
+		}
 	*/
 
 	jsonString, err := json.Marshal(r)
@@ -79,4 +79,3 @@ func parseWhois(whois []byte){
 	fmt.Println(jsonString)
 
 }
-

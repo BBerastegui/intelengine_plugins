@@ -1,4 +1,4 @@
-// 	http://www.google.es/search?start=100&num=100&filter=0&q=site:[QUERY]&gws_rd=cr
+// http://www.google.es/search?start=100&num=100&filter=0&q=site:[QUERY]&gws_rd=cr
 // Regex pdf: "https?://.*?\.pdf"
 
 package main

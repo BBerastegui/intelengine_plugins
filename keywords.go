@@ -4,7 +4,6 @@
 package main
 
 import (
-	//	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -91,10 +90,10 @@ func (rp *ResultsParser) requestByKeyword(keyword string) (results []string, err
 		// Setup the request to the target
 		req, err := http.NewRequest("GET", url, nil)
 		// Add the custom headers
-		req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36")
+		req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.4.0")
 		// Set Cookie
-		req.AddCookie(&http.Cookie{Name: "SRCHHPGUSR", Value: "ADLT=OFF&NRSLT=100"})
-		req.AddCookie(&http.Cookie{Name: "MUID", Value: "00000000000000000000000000000000"})
+		//		req.AddCookie(&http.Cookie{Name: "SRCHHPGUSR", Value: "ADLT=OFF&NRSLT=100"})
+		//		req.AddCookie(&http.Cookie{Name: "MUID", Value: "00000000000000000000000000000000"})
 
 		// Perform request and store response on "resp"
 		resp, err := client.Do(req)
